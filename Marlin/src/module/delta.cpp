@@ -219,12 +219,12 @@ void forward_kinematics(const_float_t z1, const_float_t z2, const_float_t z3) {
  */
 void home_delta() {
   DEBUG_SECTION(log_home_delta, "home_delta", DEBUGGING(LEVELING));
-
+  SERIAL_ECHOLNPGM("Rest Positions");
   // Init the current position of all carriages to 0,0,0
   current_position.reset();
   destination.reset();
   sync_plan_position();
-
+  SERIAL_ECHOLNPGM("Post Plan Position");
   // Disable stealthChop if used. Enable diag1 pin on driver.
   #if ENABLED(SENSORLESS_HOMING)
     TERN_(X_SENSORLESS, sensorless_t stealth_states_x = start_sensorless_homing_per_axis(X_AXIS));
@@ -242,9 +242,12 @@ void home_delta() {
   #endif
 
   // Move all carriages together linearly until an endstop is hit.
+  SERIAL_ECHOLNPGM("Line To Current Position");
   current_position.z = DIFF_TERN(HAS_BED_PROBE, delta_height + 10, probe.offset.z);
   line_to_current_position(homing_feedrate(Z_AXIS));
+  SERIAL_ECHOLNPGM("Synchronize Home");
   planner.synchronize();
+  SERIAL_ECHOLNPGM("Report States");
   TERN_(HAS_DELTA_SENSORLESS_PROBING, endstops.report_states());
 
   // Re-enable stealthChop if used. Disable diag1 pin on driver.
@@ -262,11 +265,12 @@ void home_delta() {
       safe_delay(SENSORLESS_STALLGUARD_DELAY); // Short delay needed to settle
     #endif
   #endif
-
+  SERIAL_ECHOLNPGM("Validate Move");
   endstops.validate_homing_move();
 
   // At least one carriage has reached the top.
   // Now re-home each carriage separately.
+  SERIAL_ECHOLNPGM("Home Individaully");
   homeaxis(A_AXIS);
   homeaxis(B_AXIS);
   homeaxis(C_AXIS);
@@ -275,8 +279,9 @@ void home_delta() {
   // Do this here all at once for Delta, because
   // XYZ isn't ABC. Applying this per-tower would
   // give the impression that they are the same.
+  SERIAL_ECHOLNPGM("Set Axis is home");
   LOOP_ABC(i) set_axis_is_at_home((AxisEnum)i);
-
+  SERIAL_ECHOLNPGM("Sync plan position");
   sync_plan_position();
 
   #if DISABLED(DELTA_HOME_TO_SAFE_ZONE) && defined(HOMING_BACKOFF_POST_MM)

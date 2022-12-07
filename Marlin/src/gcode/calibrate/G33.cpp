@@ -70,9 +70,12 @@ enum CalEnum : char {                        // the 7 main calibration points - 
 float lcd_probe_pt(const xy_pos_t &xy);
 
 void ac_home() {
+  SERIAL_ECHOLNPGM("Pre set endstops enable");
   endstops.enable(true);
+  SERIAL_ECHOLNPGM("Pre set current true");
   TERN_(SENSORLESS_HOMING, endstops.set_homing_current(true));
   home_delta();
+  SERIAL_ECHOLNPGM("Pre set current false");
   TERN_(SENSORLESS_HOMING, endstops.set_homing_current(false));
   endstops.not_homing();
 }
@@ -226,6 +229,7 @@ static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_poi
     }
 
     if (!_1p_calibration) {  // probe the radius
+      SERIAL_ECHOLNPGM("Probe the radius");
       const CalEnum start  = _4p_opposite_points ? _AB : __A;
       const float   steps  = _7p_14_intermediates ? _7P_STEP / 15.0f : // 15r * 6 + 10c = 100
                              _7p_11_intermediates ? _7P_STEP / 12.0f : // 12r * 6 +  9c = 81
@@ -259,6 +263,7 @@ static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_poi
       do_blocking_move_to_xy(0.0f, 0.0f);
     }
   }
+  SERIAL_ECHOLNPGM("Return True");
   return true;
 }
 
@@ -507,6 +512,7 @@ void GcodeSuite::G33() {
     zero_std_dev_old = zero_std_dev;
     if (!probe_calibration_points(z_at_pt, probe_points, dcr, towers_set, stow_after_each, probe_at_offset)) {
       SERIAL_ECHOLNPGM("Correct delta settings with M665 and M666");
+      SERIAL_ECHOLNPGM("AC Cleanup");
       return ac_cleanup(TERN_(HAS_MULTI_HOTEND, old_tool_index));
     }
     zero_std_dev = std_dev_points(z_at_pt, _0p_calibration, _1p_calibration, _4p_calibration, _4p_opposite_points);
@@ -664,6 +670,7 @@ void GcodeSuite::G33() {
         SERIAL_ECHO_SP(32);
         SERIAL_ECHOLNPAIR_F("std dev:", zero_std_dev, 3);
         ui.set_status(mess);
+        SERIAL_ECHOLNPGM("Post set status message");
         if (verbose_level > 1)
           print_calibration_settings(_endstop_results, _angle_results);
       }
@@ -683,12 +690,13 @@ void GcodeSuite::G33() {
         sprintf_P(&mess[15], PSTR("%03i.x"), (int)LROUND(zero_std_dev));
       ui.set_status(mess);
     }
+    SERIAL_ECHOLNPGM("Pre Home");
     ac_home();
   }
   while (((zero_std_dev < test_precision && iterations < 31) || iterations <= force_iterations) && zero_std_dev > calibration_precision);
-
+  SERIAL_ECHOLNPGM("First While Loop");
   ac_cleanup(TERN_(HAS_MULTI_HOTEND, old_tool_index));
-
+  SERIAL_ECHOLNPGM("Post While Cleanup");
   TERN_(FULL_REPORT_TO_HOST_FEATURE, set_and_report_grblstate(M_IDLE));
   #if HAS_DELTA_SENSORLESS_PROBING
     probe.test_sensitivity = { true, true, true };

@@ -471,6 +471,7 @@ void set_current_from_steppers_for_axis(const AxisEnum axis) {
  * (or from wherever it has been told it is located).
  */
 void line_to_current_position(const_feedRate_t fr_mm_s/*=feedrate_mm_s*/) {
+  SERIAL_ECHOLNPGM("Line to current position");
   planner.buffer_line(current_position, fr_mm_s);
 }
 
