@@ -185,25 +185,44 @@ static float calibration_probe(const xy_pos_t &xy, const bool stow, const bool p
  *  - Probe a grid
  */
 static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_points, const float dcr, const bool towers_set, const bool stow_after_each, const bool probe_at_offset) {
-  const bool _0p_calibration      = probe_points == 0,
-             _1p_calibration      = probe_points == 1 || probe_points == -1,
-             _4p_calibration      = probe_points == 2,
-             _4p_opposite_points  = _4p_calibration && !towers_set,
+  // const bool _0p_calibration      = probe_points == 0,
+  //            _1p_calibration      = probe_points == 1 || probe_points == -1,
+  //            _4p_calibration      = probe_points == 2,
+  //            _4p_opposite_points  = _4p_calibration && !towers_set,
+  //            _7p_calibration      = probe_points >= 3,
+  //            _7p_no_intermediates = probe_points == 3,
+  //            _7p_1_intermediates  = probe_points == 4,
+  //            _7p_2_intermediates  = probe_points == 5,
+  //            _7p_4_intermediates  = probe_points == 6,
+  //            _7p_6_intermediates  = probe_points == 7,
+  //            _7p_8_intermediates  = probe_points == 8,
+  //            _7p_11_intermediates = probe_points == 9,
+  //            _7p_14_intermediates = probe_points == 10,
+  //            _7p_intermed_points  = probe_points >= 4,
+  //            _7p_6_center         = probe_points >= 5 && probe_points <= 7,
+  //            _7p_9_center         = probe_points >= 8;
+
+  // probe_points = 3
+  const bool _0p_calibration      = false,
+             _1p_calibration      = false,
+             _4p_calibration      = false,
+             _4p_opposite_points  = false,
              _7p_calibration      = probe_points >= 3,
              _7p_no_intermediates = probe_points == 3,
-             _7p_1_intermediates  = probe_points == 4,
-             _7p_2_intermediates  = probe_points == 5,
-             _7p_4_intermediates  = probe_points == 6,
-             _7p_6_intermediates  = probe_points == 7,
-             _7p_8_intermediates  = probe_points == 8,
-             _7p_11_intermediates = probe_points == 9,
-             _7p_14_intermediates = probe_points == 10,
-             _7p_intermed_points  = probe_points >= 4,
-             _7p_6_center         = probe_points >= 5 && probe_points <= 7,
-             _7p_9_center         = probe_points >= 8;
+             _7p_1_intermediates  = false,
+             _7p_2_intermediates  = false,
+             _7p_4_intermediates  = false,
+             _7p_6_intermediates  = false,
+             _7p_8_intermediates  = false,
+             _7p_11_intermediates = false,
+             _7p_14_intermediates = false,
+             _7p_intermed_points  = false,
+             _7p_6_center         = false,
+             _7p_9_center         = false;
 
   LOOP_CAL_ALL(rad) z_pt[rad] = 0.0f;
-
+  SERIAL_ECHOPGM("Probe Points - G33.cpp - 206 - ", probe_points);
+  // SERIAL_ECHOLNPGM("Probe Points - G33.cpp - 206");
   if (!_0p_calibration) {
 
     if (!_7p_no_intermediates && !_7p_4_intermediates && !_7p_11_intermediates) { // probe the center
@@ -219,6 +238,7 @@ static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_poi
         const float a = RADIANS(210 + (360 / NPP) *  (rad - 1)),
                     r = dcr * 0.1;
         const xy_pos_t vec = { cos(a), sin(a) };
+        SERIAL_ECHOPGM("XY Pos Vec - G33.cpp - 240 - ", vec);
         z_pt[CEN] += calibration_probe(vec * r, stow_after_each, probe_at_offset);
         if (isnan(z_pt[CEN])) return false;
      }
@@ -694,5 +714,5 @@ void GcodeSuite::G33() {
     probe.test_sensitivity = { true, true, true };
   #endif
 }
-
+// SERIAL_ECHOLNPGM("Template Debug Message - G33.cpp - 697");
 #endif // DELTA_AUTO_CALIBRATION
