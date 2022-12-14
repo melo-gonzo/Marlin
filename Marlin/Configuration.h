@@ -906,7 +906,7 @@
 
   #if ENABLED(DELTA_AUTO_CALIBRATION)
     // Default number of probe points : n*n (1 -> 7)
-    #define DELTA_CALIBRATION_DEFAULT_POINTS 3
+    #define DELTA_CALIBRATION_DEFAULT_POINTS 7
   #endif
 
   // NOTE: All values for DELTA_* values MUST be floating point, so always have a decimal point in them
@@ -923,12 +923,12 @@
   #define DELTA_MAX_RADIUS       180.0    // (mm)
 
   // Center-to-center distance of the holes in the diagonal push rods.
-  #define DELTA_DIAGONAL_ROD 228.92        // (mm)
+  #define DELTA_DIAGONAL_ROD 230.837        // (mm) OG - 228.92 
 
   // Distance between bed and nozzle Z home position
-  #define DELTA_HEIGHT 320.90           // (mm) Get this value from G33 auto calibrate
-
-  #define DELTA_ENDSTOP_ADJ { 0.0, 0.0, 0.0 } // Get these values from G33 auto calibrate
+  #define DELTA_HEIGHT 320.43           // (mm) Get this value from G33 auto calibrate
+  // Ex:-0.62  Ey:0.00  Ez:-0.46
+  #define DELTA_ENDSTOP_ADJ { -0.87, 0.0, -0.66 } // Get these values from G33 auto calibrate
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
   #define DELTA_RADIUS 106.75              // (mm) Get this value from G33 auto calibrate
@@ -1496,7 +1496,7 @@
 #define XY_PROBE_FEEDRATE (3000)
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST (1500)
+#define Z_PROBE_FEEDRATE_FAST (3000)
 
 // Feedrate (mm/min) for the "accurate" probe of each point
 #define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2)
@@ -1958,7 +1958,7 @@
 #if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_X 7
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Probe along the Y axis, advancing X after each column

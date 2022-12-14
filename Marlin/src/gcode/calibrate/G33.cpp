@@ -89,10 +89,12 @@ void ac_setup(const bool reset_bed) {
 }
 
 void ac_cleanup(TERN_(HAS_MULTI_HOTEND, const uint8_t old_tool_index)) {
+  SERIAL_ECHOLNPGM("Pre Cleanup - G33.cpp - 92");
   TERN_(DELTA_HOME_TO_SAFE_ZONE, do_blocking_move_to_z(delta_clip_start_height));
   TERN_(HAS_BED_PROBE, probe.stow());
   restore_feedrate_and_scaling();
   TERN_(HAS_MULTI_HOTEND, tool_change(old_tool_index, true));
+  SERIAL_ECHOLNPGM("Post Cleanup - G33.cpp - 97");
 }
 
 void print_signed_float(FSTR_P const prefix, const_float_t f) {
@@ -185,60 +187,42 @@ static float calibration_probe(const xy_pos_t &xy, const bool stow, const bool p
  *  - Probe a grid
  */
 static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_points, const float dcr, const bool towers_set, const bool stow_after_each, const bool probe_at_offset) {
-  // const bool _0p_calibration      = probe_points == 0,
-  //            _1p_calibration      = probe_points == 1 || probe_points == -1,
-  //            _4p_calibration      = probe_points == 2,
-  //            _4p_opposite_points  = _4p_calibration && !towers_set,
-  //            _7p_calibration      = probe_points >= 3,
-  //            _7p_no_intermediates = probe_points == 3,
-  //            _7p_1_intermediates  = probe_points == 4,
-  //            _7p_2_intermediates  = probe_points == 5,
-  //            _7p_4_intermediates  = probe_points == 6,
-  //            _7p_6_intermediates  = probe_points == 7,
-  //            _7p_8_intermediates  = probe_points == 8,
-  //            _7p_11_intermediates = probe_points == 9,
-  //            _7p_14_intermediates = probe_points == 10,
-  //            _7p_intermed_points  = probe_points >= 4,
-  //            _7p_6_center         = probe_points >= 5 && probe_points <= 7,
-  //            _7p_9_center         = probe_points >= 8;
-
-  // probe_points = 3
-  const bool _0p_calibration      = false,
-             _1p_calibration      = false,
-             _4p_calibration      = false,
-             _4p_opposite_points  = false,
+  const bool _0p_calibration      = probe_points == 0,
+             _1p_calibration      = probe_points == 1 || probe_points == -1,
+             _4p_calibration      = probe_points == 2,
+             _4p_opposite_points  = _4p_calibration && !towers_set,
              _7p_calibration      = probe_points >= 3,
              _7p_no_intermediates = probe_points == 3,
-             _7p_1_intermediates  = false,
-             _7p_2_intermediates  = false,
-             _7p_4_intermediates  = false,
-             _7p_6_intermediates  = false,
-             _7p_8_intermediates  = false,
-             _7p_11_intermediates = false,
-             _7p_14_intermediates = false,
-             _7p_intermed_points  = false,
-             _7p_6_center         = false,
-             _7p_9_center         = false;
+             _7p_1_intermediates  = probe_points == 4,
+             _7p_2_intermediates  = probe_points == 5,
+             _7p_4_intermediates  = probe_points == 6,
+             _7p_6_intermediates  = probe_points == 7,
+             _7p_8_intermediates  = probe_points == 8,
+             _7p_11_intermediates = probe_points == 9,
+             _7p_14_intermediates = probe_points == 10,
+             _7p_intermed_points  = probe_points >= 4,
+             _7p_6_center         = probe_points >= 5 && probe_points <= 7,
+             _7p_9_center         = probe_points >= 8;
 
   LOOP_CAL_ALL(rad) z_pt[rad] = 0.0f;
-  SERIAL_ECHOPGM("Probe Points - G33.cpp - 206 - ", probe_points);
-  // SERIAL_ECHOLNPGM("Probe Points - G33.cpp - 206");
+
   if (!_0p_calibration) {
 
-    if (!_7p_no_intermediates && !_7p_4_intermediates && !_7p_11_intermediates) { // probe the center
+    // if (!_7p_no_intermediates && !_7p_4_intermediates && !_7p_11_intermediates) { // probe the center
+      SERIAL_ECHOLNPGM("0PT Calibration - G33.cpp - 217");
       const xy_pos_t center{0};
       z_pt[CEN] += calibration_probe(center, stow_after_each, probe_at_offset);
       if (isnan(z_pt[CEN])) return false;
-    }
+    // }
 
     if (_7p_calibration) { // probe extra center points
+      SERIAL_ECHOLNPGM("7PT Calibration - G33.cpp - 217");
       const float start  = _7p_9_center ? float(_CA) + _7P_STEP / 3.0f : _7p_6_center ? float(_CA) : float(__C),
                   steps  = _7p_9_center ? _4P_STEP / 3.0f : _7p_6_center ? _7P_STEP : _4P_STEP;
       I_LOOP_CAL_PT(rad, start, steps) {
         const float a = RADIANS(210 + (360 / NPP) *  (rad - 1)),
                     r = dcr * 0.1;
         const xy_pos_t vec = { cos(a), sin(a) };
-        SERIAL_ECHOPGM("XY Pos Vec - G33.cpp - 240 - ", vec);
         z_pt[CEN] += calibration_probe(vec * r, stow_after_each, probe_at_offset);
         if (isnan(z_pt[CEN])) return false;
      }
@@ -246,6 +230,7 @@ static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_poi
     }
 
     if (!_1p_calibration) {  // probe the radius
+      SERIAL_ECHOLNPGM("Not 1PT Calibration - G33.cpp - 231");
       const CalEnum start  = _4p_opposite_points ? _AB : __A;
       const float   steps  = _7p_14_intermediates ? _7P_STEP / 15.0f : // 15r * 6 + 10c = 100
                              _7p_11_intermediates ? _7P_STEP / 12.0f : // 12r * 6 +  9c = 81
@@ -275,10 +260,12 @@ static bool probe_calibration_points(float z_pt[NPP + 1], const int8_t probe_poi
       if (_7p_intermed_points)
         LOOP_CAL_RAD(rad)
           z_pt[rad] /= _7P_STEP / steps;
-
+      SERIAL_ECHOLNPGM("Befor Blocking Move - G33.cpp - 262");
       do_blocking_move_to_xy(0.0f, 0.0f);
+      SERIAL_ECHOLNPGM("After Blocking Move - G33.cpp - 264");
     }
   }
+  SERIAL_ECHOLNPGM("Returning True - G33.cpp - 266");
   return true;
 }
 
@@ -703,6 +690,8 @@ void GcodeSuite::G33() {
         sprintf_P(&mess[15], PSTR("%03i.x"), (int)LROUND(zero_std_dev));
       ui.set_status(mess);
     }
+    SERIAL_ECHOLNPGM("Pre Intermediate Home - G33.cpp - 693");
+    print_calibration_settings(_endstop_results, _angle_results);
     ac_home();
   }
   while (((zero_std_dev < test_precision && iterations < 31) || iterations <= force_iterations) && zero_std_dev > calibration_precision);
@@ -714,5 +703,5 @@ void GcodeSuite::G33() {
     probe.test_sensitivity = { true, true, true };
   #endif
 }
-// SERIAL_ECHOLNPGM("Template Debug Message - G33.cpp - 697");
+
 #endif // DELTA_AUTO_CALIBRATION
