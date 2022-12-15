@@ -926,9 +926,9 @@
   #define DELTA_DIAGONAL_ROD 230.837        // (mm) OG - 228.92 
 
   // Distance between bed and nozzle Z home position
-  #define DELTA_HEIGHT 320.43           // (mm) Get this value from G33 auto calibrate
+  #define DELTA_HEIGHT 326.72          // (mm) Get this value from G33 auto calibrate
   // Ex:-0.62  Ey:0.00  Ez:-0.46
-  #define DELTA_ENDSTOP_ADJ { -0.87, 0.0, -0.66 } // Get these values from G33 auto calibrate
+  #define DELTA_ENDSTOP_ADJ { -1.12, 0.0, -0.48 } // Get these values from G33 auto calibrate
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
   #define DELTA_RADIUS 106.75              // (mm) Get this value from G33 auto calibrate
@@ -1170,7 +1170,7 @@
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {160, 160, 160, 200}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {320, 320, 320, 400}
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
