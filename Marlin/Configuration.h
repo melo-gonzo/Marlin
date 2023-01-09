@@ -917,10 +917,10 @@
   #endif
 
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
-  #define DELTA_PRINTABLE_RADIUS 180.0     // (mm)
+  #define DELTA_PRINTABLE_RADIUS 200     // (mm)
 
   // Maximum reachable area
-  #define DELTA_MAX_RADIUS       180.0    // (mm)
+  #define DELTA_MAX_RADIUS       200    // (mm)
 
   // Center-to-center distance of the holes in the diagonal push rods.
   #define DELTA_DIAGONAL_ROD 230.837        // (mm) OG - 228.92 
@@ -1493,10 +1493,10 @@
 #define PROBING_MARGIN 10
 
 // X and Y axis travel speed (mm/min) between probes
-#define XY_PROBE_FEEDRATE (3000)
+#define XY_PROBE_FEEDRATE (1000)
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST (3000)
+#define Z_PROBE_FEEDRATE_FAST (1000)
 
 // Feedrate (mm/min) for the "accurate" probe of each point
 #define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2)
@@ -1697,14 +1697,14 @@
 // @section geometry
 
 // The size of the printable area
-#define X_BED_SIZE 180
-#define Y_BED_SIZE 180
+#define X_BED_SIZE DELTA_PRINTABLE_RADIUS
+#define Y_BED_SIZE DELTA_PRINTABLE_RADIUS
 
 // Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
-#define X_MAX_POS 90
-#define X_MIN_POS -90
-#define Y_MAX_POS 90
-#define Y_MIN_POS -90
+#define X_MAX_POS DELTA_PRINTABLE_RADIUS/2
+#define X_MIN_POS -DELTA_PRINTABLE_RADIUS/2
+#define Y_MAX_POS DELTA_PRINTABLE_RADIUS/2
+#define Y_MIN_POS -DELTA_PRINTABLE_RADIUS/2
 #define Z_MAX_POS MANUAL_Z_HOME_POS
 #define Z_MIN_POS 0
 // #define X_MIN_POS 0
