@@ -927,8 +927,8 @@
 
   // Distance between bed and nozzle Z home position
   #define DELTA_HEIGHT 326.72          // (mm) Get this value from G33 auto calibrate
-  // Ex:-0.62  Ey:0.00  Ez:-0.46
-  #define DELTA_ENDSTOP_ADJ { -1.0, 0.0, -0.39 } // Get these values from G33 auto calibrate
+  // -1.0, 0.0, -0.39
+  #define DELTA_ENDSTOP_ADJ { 0.0, 0.0, 0.0 } // Get these values from G33 auto calibrate
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
   #define DELTA_RADIUS 106.75              // (mm) Get this value from G33 auto calibrate
@@ -1736,7 +1736,7 @@
  */
 
 // Min software endstops constrain movement within minimum coordinate bounds
-// #define MIN_SOFTWARE_ENDSTOPS
+#define MIN_SOFTWARE_ENDSTOPS
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS)
   #define MIN_SOFTWARE_ENDSTOP_X
   #define MIN_SOFTWARE_ENDSTOP_Y
@@ -1750,7 +1750,7 @@
 #endif
 
 // Max software endstops constrain movement within maximum coordinate bounds
-// #define MAX_SOFTWARE_ENDSTOPS
+#define MAX_SOFTWARE_ENDSTOPS
 #if ENABLED(MAX_SOFTWARE_ENDSTOPS)
   #define MAX_SOFTWARE_ENDSTOP_X
   #define MAX_SOFTWARE_ENDSTOP_Y
