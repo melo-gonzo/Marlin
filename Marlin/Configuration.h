@@ -926,7 +926,7 @@
   #define DELTA_DIAGONAL_ROD 230.136        // (mm) OG - 228.92 
 
   // Distance between bed and nozzle Z home position
-  #define DELTA_HEIGHT 326.32          // (mm) Get this value from G33 auto calibrate
+  #define DELTA_HEIGHT 346.15          // (mm) Get this value from G33 auto calibrate
   // -1.0, 0.0, -0.39
   #define DELTA_ENDSTOP_ADJ { 0.0, 0.0, 0.0 } // Get these values from G33 auto calibrate
 
@@ -1169,8 +1169,8 @@
  * Default Axis Steps Per Unit (linear=steps/mm, rotational=steps/°)
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
- */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {320, 320, 320, 400}
+ */                                   //using 320 microsteps and 32 microstepping mode for 0.9 deg motors
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {160, 160, 160, 400}
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
@@ -1493,10 +1493,10 @@
 #define PROBING_MARGIN 10
 
 // X and Y axis travel speed (mm/min) between probes
-#define XY_PROBE_FEEDRATE (1000)
+#define XY_PROBE_FEEDRATE (3000)
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST (1000)
+#define Z_PROBE_FEEDRATE_FAST (3000)
 
 // Feedrate (mm/min) for the "accurate" probe of each point
 #define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2)
