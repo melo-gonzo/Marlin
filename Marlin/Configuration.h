@@ -917,10 +917,10 @@
   #endif
 
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
-  #define DELTA_PRINTABLE_RADIUS 200     // (mm)
+  #define DELTA_PRINTABLE_RADIUS 180     // (mm)
 
   // Maximum reachable area
-  #define DELTA_MAX_RADIUS       200    // (mm)
+  #define DELTA_MAX_RADIUS       180    // (mm)
 
   // Center-to-center distance of the holes in the diagonal push rods. OG*(Measured/Desired)
   #define DELTA_DIAGONAL_ROD 230.136        // (mm) OG - 228.92 
@@ -1170,7 +1170,7 @@
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */                                   //using 320 microsteps and 32 microstepping mode for 0.9 deg motors
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {160, 160, 160, 400}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {320, 320, 320, 400}
 
 /**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
